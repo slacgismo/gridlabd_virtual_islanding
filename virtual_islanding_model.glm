@@ -383,7 +383,7 @@ object meter {
 	object recorder {
 		property measured_real_energy, measured_reactive_energy;
 		interval -1; 
-		file "swing_bus_energy.csv";
+		file "output/swing_bus_energy.csv";
 	};
 }
 
