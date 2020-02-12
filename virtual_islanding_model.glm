@@ -13,25 +13,7 @@
 #set minimum_timestep=30
 
 
-//////////////CONFIG//////////////////////////////////
-#define STARTTIME=2020-01-30T00:00:00-05:00
-#define STOPTIME="2020-01-31T00:00:00-05:00"
-#define BASELINESTARTTIME=2020-01-30T00:00:00-05:00
-#define BASELINESTOPTIME=2020-01-31T00:00:00-05:00
-#define RECORDINTERVAL=30
-
-#define TIMEZONE=EST+5EDT
-
-#define LOCATION=LA_CA //LA_CA //BUR_VT
-
-#define LOADS=on
-
-#define MYSQL_AMI=off
-#define SOLAR=off
-
-#define VOLT_POWER_DUMP=off //FIX
-
-#define COMMERCIALLOADFLAG=OFF //ON
+#include "config.glm"
 
 ////////////// MODULES /////////////////////////////////
 module residential {
@@ -398,6 +380,11 @@ object meter {
 	phases ABCN;
 	bustype SWING;
 	nominal_voltage 12.47 kV;
+	object recorder {
+		property measured_real_energy, measured_reactive_energy;
+		interval -1; 
+		file "swing_bus_power.csv";
+	};
 }
 
 object meter {
@@ -938,6 +925,9 @@ object switch {
 	phases ABCN;
 	status OPEN;
 }
+
+#if ${GRID_SOLAR}==on
+#print "GRID SOLAR CONNECTED"
 // Switches between batteries and solar
 object switch {
 	name sw_supernode_102_solar;
@@ -960,27 +950,7 @@ object switch {
 	phases ABCN;
 	status CLOSED;
 }
-object switch {
-	name sw_supernode_103_battery;
-	from supernode_103;
-	to node_103_battery;
-	phases ABCN;
-	status CLOSED;
-}
-object switch {
-	name sw_supernode_203_battery;
-	from supernode_203;
-	to node_203_battery;
-	phases ABCN;
-	status CLOSED;
-}
-object switch {
-	name sw_supernode_303_battery;
-	from supernode_303;
-	to node_303_battery;
-	phases ABCN;
-	status CLOSED;
-}
+
 
 
 /////////////////////SOLAR///////////////////
@@ -1061,8 +1031,33 @@ object meter {
 	phases ABCN;
 	nominal_voltage 2401.7771;
 }
+#endif // GRID_SOLAR
 
+#if ${GRID_BATTERY}==on 
+#print "GRID BATTERY CONNECTED"
 /////////////////////BATTERY///////////////////
+object switch {
+	name sw_supernode_103_battery;
+	from supernode_103;
+	to node_103_battery;
+	phases ABCN;
+	status CLOSED;
+}
+object switch {
+	name sw_supernode_203_battery;
+	from supernode_203;
+	to node_203_battery;
+	phases ABCN;
+	status CLOSED;
+}
+object switch {
+	name sw_supernode_303_battery;
+	from supernode_303;
+	to node_303_battery;
+	phases ABCN;
+	status CLOSED;
+}
+
 object inverter {
     name inv_supernode_103_battery;
 	parent node_103_battery;
@@ -1176,7 +1171,7 @@ object meter {
 	phases ABCN;
 	nominal_voltage 2401.7771;
 }
-
+#endif //GRID_BATTERY
 
 schedule waterheater_demand_prob {
 	* 5-21 * * * 0.99;

@@ -1,8 +1,0 @@
-# file...... timeseries_data_gen_strg.csv
-# date...... Tue Feb 11 16:42:20 2020
-# user...... alyona_slac
-# host...... (null)
-# trigger... (none)
-# interval.. 30
-# limit..... 0
-# timestamp,inv_supernode_102_solar:VA_Out.real[kW], inv_supernode_202_solar:VA_Out.real[kW], inv_supernode_302_solar:VA_Out.real[kW],inv_supernode_103_battery:VA_Out.real[kW], inv_supernode_203_battery:VA_Out.real[kW], inv_supernode_303_battery:VA_Out.real[kW],battery_supernode_103:state_of_charge, battery_supernode_203:state_of_charge, battery_supernode_303:state_of_charge,battery_supernode_103:battery_capacity[kWh], battery_supernode_203:battery_capacity[kWh], battery_supernode_303:battery_capacity[kWh]
