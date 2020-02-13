@@ -13,6 +13,7 @@ jobs:
       - run:
           name: Run the simulation
           command: |
+            mkdir output
             python3 run_gridlabd_main.py
       - store_artifacts: 
             path: /root/project/output
