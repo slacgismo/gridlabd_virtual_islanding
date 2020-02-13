@@ -9,8 +9,7 @@ jobs:
       - run: 
           name: Run version check
           command: |
-            gridlabd --version
-            gridlabd --origin
+            gridlabd --version=all
       - run:
           name: Run the simulation
           command: |
