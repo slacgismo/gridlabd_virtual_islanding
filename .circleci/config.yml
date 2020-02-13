@@ -3,7 +3,7 @@ version: 2.1
 jobs: 
   build:
     docker: 
-      - image: slacgismo/gridlabd:latest
+      - image: slacgismo/gridlabd:develop
     steps: 
       - checkout 
       - run: 
