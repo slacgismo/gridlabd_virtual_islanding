@@ -15,6 +15,38 @@
 
 #include "config.glm"
 
+module influxdb
+{
+	message_flags "DEBUG";
+	default_username "gridlabd";
+	default_password "gridlabd";
+	default_hostname "localhost";
+	default_port 8086;
+	default_database "gridlabd";
+    synchronous_postdata "TRUE";
+}
+
+object database
+ {
+ 	name "primary";
+ 	logname "log";
+
+ 	// single dynamic tag
+ 	logtag `mytag=test1,guid={GUID},database`;
+
+ 	options NEWDB;
+ }
+
+ object database
+ {
+ 	name "secondary";
+ 	logname "log";
+
+ 	// multiple dynamic tags
+ 	logtag "username";
+ 	logtag `mytag=test2,tag2=abc,hostname,guid={GUID}`;
+ }
+
 ////////////// MODULES /////////////////////////////////
 module residential {
 	implicit_enduses REFRIGERATOR|LIGHTS|PLUGS;
@@ -380,10 +412,16 @@ object meter {
 	phases ABCN;
 	bustype SWING;
 	nominal_voltage 12.47 kV;
-	object recorder {
-		property measured_real_energy, measured_reactive_energy;
-		interval -1; 
-		file "output/swing_bus_energy.csv";
+	object influxdb.recorder {
+	//	property measured_real_energy, measured_reactive_energy;
+	//	interval -1; 
+	//	file "output/swing_bus_energy.csv";
+		connection "secondary";
+ 		fields "measured_real_energy";
+ 		tags "name,class,module,id,parent,child_count,schedule_skew,rank,clock,valid_to,latitude,longitude,in_svc,out_svc,flags,heartbeat,groupid,rng_state,guid,on_init,on_precommit,on_presync,on_sync,on_postsync,on_commit,on_finalize";
+ 		interval 15 min;
+ 		measurement "metering";
+ 		options UNITS;
 	};
 }
 
@@ -1089,6 +1127,7 @@ object battery {
 	// reserve_state_of_charge 0.0;
 	generator_mode SUPPLY_DRIVEN;
 }
+
 
 object meter {
 	name node_103_battery;
